@@ -1,6 +1,7 @@
 # Binary files
 *
 !*.*
+!*/
 
 # Compiled Object files
 *.slo
