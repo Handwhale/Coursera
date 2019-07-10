@@ -1,4 +1,5 @@
 // https://www.coursera.org/learn/c-plus-plus-white/programming/9LFl2/a-b
+// A+B
 #include <iostream>
 
 using namespace std;
