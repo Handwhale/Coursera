@@ -1,0 +1,79 @@
+Знакомство с C++
+https://www.coursera.org/learn/c-plus-plus-white/exam/MSBk2/znakomstvo-s-c
+
+1. 123
+2. 2456
+3. Less than 10
+4. заменить в условном операторе "x = 0" на "x == 0"
+
+Языковые конструкции
+https://www.coursera.org/learn/c-plus-plus-white/exam/2Fxww/iazykovyie-konstruktsii
+
+1. Все правильно
+2. 1
+3. Последняя
+4. Вторая
+
+Функции
+https://www.coursera.org/learn/c-plus-plus-white/exam/SDInO/funktsii
+
+1. Hello
+2. Hello world
+3. 3 и 4 
+4. 1 и 3
+5. 3, 4, 5
+
+Векторы
+https://www.coursera.org/learn/c-plus-plus-white/exam/L06Fn/viektory
+
+1. 2, 3, 5, 6
+2. 2, 4
+3. 1, 2, 3
+4. 2
+
+Словари
+https://www.coursera.org/learn/c-plus-plus-white/exam/E81D4/slovari
+
+1. 5
+2. 1
+3. 5
+4. 5
+
+Алгоритмы
+https://www.coursera.org/learn/c-plus-plus-white/exam/6TiIz/alghoritmy
+
+1. 3
+2. 1
+3. 4
+4. min
+
+Видимость и инициализация переменных
+https://www.coursera.org/learn/c-plus-plus-white/exam/bH8Wm/vidimost-i-initsializatsiia-pieriemiennykh
+
+1. 2
+2. 4
+3. 3
+4. 4
+5. 2, 3, 5
+6. 1
+7. 1, 3
+8. 1
+
+Введение в структуры и классы
+https://www.coursera.org/learn/c-plus-plus-white/exam/ASb45/vviedieniie-v-struktury-i-klassy
+
+1. 2, 4
+2. 1, 2, 5, 6
+3. 1, 2, 3
+
+Константность методов
+https://www.coursera.org/learn/c-plus-plus-white/exam/8rzD3/konstantnost-mietodov
+
+1. 3
+2. 4
+
+Конструкторы
+https://www.coursera.org/learn/c-plus-plus-white/exam/d68WW/konstruktory
+
+1. 2, 3, 5
+2. 1, 2
