@@ -77,3 +77,11 @@ https://www.coursera.org/learn/c-plus-plus-white/exam/d68WW/konstruktory
 
 1. 2, 3, 5
 2. 1, 2
+
+Деструкторы и время жизни объекта
+https://www.coursera.org/learn/c-plus-plus-white/exam/Eq5nm/diestruktory-i-vriemia-zhizni-obiekta
+
+1. acbd
+2. acbd
+3. acbdced
+4. abcedabcedf
