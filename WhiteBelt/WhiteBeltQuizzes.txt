@@ -93,3 +93,19 @@ https://www.coursera.org/learn/c-plus-plus-white/exam/Eq5nm/diestruktory-i-vriem
 2. acbd
 3. acbdced
 4. abcedabcedf
+
+Работа с текстовыми файлами и потоками
+https://www.coursera.org/learn/c-plus-plus-white/exam/M1kvP/rabota-s-tiekstovymi-failami-i-potokami
+
+1. fstream
+2. ostream
+3. 2, 4
+4. all
+5. 1
+
+Перегрузка операторов
+https://www.coursera.org/learn/c-plus-plus-white/exam/LdRcs/pierieghruzka-opieratorov
+
+1. 2
+2. 1, 2, 3, 4
+3. 2
