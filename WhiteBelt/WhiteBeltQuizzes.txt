@@ -39,6 +39,14 @@ https://www.coursera.org/learn/c-plus-plus-white/exam/E81D4/slovari
 3. 5
 4. 5
 
+Множества
+https://www.coursera.org/learn/c-plus-plus-white/exam/gHQ30/mnozhiestva
+
+1. 1
+2. 1
+3. 4
+4. 2
+
 Алгоритмы
 https://www.coursera.org/learn/c-plus-plus-white/exam/6TiIz/alghoritmy
 
