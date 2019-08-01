@@ -109,3 +109,10 @@ https://www.coursera.org/learn/c-plus-plus-white/exam/LdRcs/pierieghruzka-opiera
 1. 2
 2. 1, 2, 3, 4
 3. 2
+
+Исключения
+https://www.coursera.org/learn/c-plus-plus-white/exam/gXBQ2/iskliuchieniia
+
+1. throw
+2. 2, 3
+3. 1
