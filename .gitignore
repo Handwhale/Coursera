@@ -34,4 +34,8 @@
 
 # VSCode
 .vscode
-Submittable tasks
+
+# For fooling around and formatting solution before coursera submission
+TestStuff.cpp
+Checkout.cpp
+
