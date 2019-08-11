@@ -14,3 +14,27 @@ https://www.coursera.org/learn/c-plus-plus-yellow/exam/EYGJi/shablony-funktsii/a
 2. 2, 3 
 3. 2
 4. 3, 4
+
+Юнит-тестирование
+https://www.coursera.org/learn/c-plus-plus-yellow/exam/a06YF/iunit-tiestirovaniie/attempt
+
+1. 3, 4, 5
+2. 2
+3. 1, 3, 5
+
+Разработка фреймворка юнит-тестов
+https://www.coursera.org/learn/c-plus-plus-yellow/exam/fJWiU/razrabotka-frieimvorka-iunit-tiestov/attempt
+
+1. 1, 2
+2. 1
+3. 1
+4. 1, 2
+
+Тестирование и отладка. Итоги
+https://www.coursera.org/learn/c-plus-plus-yellow/exam/sUN7F/tiestirovaniie-i-otladka-itoghi
+
+1. 3
+2. 1, 2
+3. 1, 3, 4
+4. 1, 3, 4
+5. 1, 2
