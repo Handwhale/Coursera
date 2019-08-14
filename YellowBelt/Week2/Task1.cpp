@@ -45,7 +45,7 @@ istream &operator>>(istream &is, Query &q)
         for (int i = 0; i < stops_count; i++)
         {
             string value;
-            cin >> value;
+            is >> value;
             new_q.stops.push_back(value);
         }
     }
