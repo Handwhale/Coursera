@@ -284,7 +284,7 @@ int main()
                 }
                 else
                 {
-                    if (db.DeleteEvent(date_arg, event_arg))
+                   vector check if contains if (db.DeleteEvent(date_arg, event_arg))
                     {
                         cout << "Deleted successfully" << endl;
                     }
