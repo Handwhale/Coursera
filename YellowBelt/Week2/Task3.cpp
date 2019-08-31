@@ -119,34 +119,63 @@ private:
 
 bool IsPalindrom(const string &str);
 
-void BoundaryCases(){
+void BoundaryCases()
+{
     Assert(IsPalindrom(""), "Empty string");
     Assert(IsPalindrom("v"), "One char string");
     Assert(IsPalindrom(" "), "One space char string");
+    Assert(IsPalindrom("        "), "Space string");
     Assert(IsPalindrom("."), "One special char string");
 }
 
-void EvenCases(){
+void EvenCases()
+{
     Assert(IsPalindrom("qwwq"), "Even case #1");
     Assert(IsPalindrom("qw  wq"), "Even case #2");
     Assert(IsPalindrom("ZxCvvCxZ"), "Even case #3");
     Assert(IsPalindrom("Z x Cv  vC x Z"), "Even case #4");
     Assert(!IsPalindrom("Z x CV  vC x Z"), "Even case #5");
+    Assert(!IsPalindrom("xyYX"), "Even case #6");
 }
 
-void OddCases(){
+void OddCases()
+{
     Assert(IsPalindrom("madam"), "Odd case #1");
     Assert(IsPalindrom("ma am"), "Odd case #2");
     Assert(!IsPalindrom("wrong"), "Odd case #3");
-    
+}
+
+void SpecialCharters()
+{
+    Assert(IsPalindrom("*/ /*"), "SpecialCharter #1");
+    Assert(IsPalindrom("#$ $#"), "SpecialCharter #2");
+    Assert(IsPalindrom("@!!@"), "SpecialCharter #3");
+    Assert(!IsPalindrom("(^**^)"), "SpecialCharter #4");
+    Assert(!IsPalindrom("(^*/*^)"), "SpecialCharter #5");
+    Assert(IsPalindrom("-+-"), "SpecialCharter #6");
+
+    Assert(!IsPalindrom("+-"), "SpecialCharter #7");
+    Assert(!IsPalindrom("%*"), "SpecialCharter #8");
+    Assert(!IsPalindrom("()"), "SpecialCharter #9");
+    Assert(IsPalindrom("\n"), "SpecialCharter #10");
+}
+
+void SpaceCase(){
+    Assert(IsPalindrom(" q "), "SpaceCase #2");
+    Assert(IsPalindrom("  q  "), "SpaceCase #3");
+    Assert(IsPalindrom("qw     wq"), "SpaceCase #4");
+    Assert(!IsPalindrom(" q we   ew q"), "SpaceCase #5");
+    Assert(!IsPalindrom("q w ee  w  q"), "SpaceCase #6");
 }
 
 void RunAllTests()
 {
     TestRunner runner;
-    runner.RunTest(BoundaryCases,"BoundaryCases");
-    runner.RunTest(EvenCases,"EvenCases");
-    runner.RunTest(OddCases,"OddCases");
+    runner.RunTest(BoundaryCases, "BoundaryCases");
+    runner.RunTest(EvenCases, "EvenCases");
+    runner.RunTest(OddCases, "OddCases");
+    runner.RunTest(SpecialCharters, "SpecialCharters");
+    runner.RunTest(SpaceCase, "SpaceCase");
 }
 
 int main()

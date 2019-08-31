@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-// ЗАКОМЕНТЬ КЛАССС RATIONAL
-
 using namespace std;
 
 template <class T>
@@ -122,20 +120,12 @@ private:
 class Rational
 {
 public:
-    Rational(){}
-    Rational(int numerator, int denominator)
-    {
-    }
+    Rational();
+    Rational(int numerator, int denominator);
 
-    int Numerator() const
-    {
-        return 1;
-    }
+    int Numerator() const;
 
-    int Denominator() const
-    {
-        return 1;
-    }
+    int Denominator() const;
 };
 
 void DefaultConstructorTest()

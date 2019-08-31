@@ -29,7 +29,7 @@ PhoneNumber::PhoneNumber(const string &international_number) {
     city_code_ = GetRange(str, '-');
 
     // Local code
-    str = str.substr(country_code_.size() + 1, str.size() - 1);
+    str = str.substr(city_code_.size() + 1, str.size() - 1);
     if (str.empty())
         throw invalid_argument("Out of format");
     local_number_ = str;

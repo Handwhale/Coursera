@@ -1,5 +1,5 @@
-// Всё в квадрат
-// https://www.coursera.org/learn/c-plus-plus-yellow/programming/YQJs1/vsio-v-kvadrat
+// Ссылка на элемент
+// https://www.coursera.org/learn/c-plus-plus-yellow/programming/ju9bq/ssylka-na-eliemient
 #include <iostream>
 #include <vector>
 #include <sstream>

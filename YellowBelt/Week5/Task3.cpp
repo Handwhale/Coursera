@@ -7,8 +7,8 @@ using namespace std;
 class Human
 {
 public:
-    Human(string new_name, string new_type) : _name(new_name), _type(new_type) {}
-    virtual void Walk(string destination) const
+    Human(const string &new_name, const string &new_type) : _name(new_name), _type(new_type) {}
+    virtual void Walk(const string &destination) const
     {
         cout << GetType() << ": " << _name << " walks to: " << destination << endl;
     }
@@ -24,14 +24,14 @@ protected:
 class Student : public Human
 {
 public:
-    Student(string name, string favouriteSong) : Human(name, "Student"), _favouriteSong(favouriteSong) {}
+    Student(const string &name, const string &favouriteSong) : Human(name, "Student"), _favouriteSong(favouriteSong) {}
 
     void Learn() const
     {
         cout << GetFullIdentification() << " learns" << endl;
     }
 
-    void Walk(string destination) const override
+    void Walk(const string &destination) const override
     {
         Human::Walk(destination);
         cout << GetFullIdentification() << " sings a song: " << _favouriteSong << endl;
@@ -49,24 +49,21 @@ private:
 class Teacher : public Human
 {
 public:
-    Teacher(string name, string subject) : Human(name, "Teacher")
-    {
-        Subject = subject;
-    }
+    Teacher(const string &name, const string &subject) : Human(name, "Teacher"), _subject(subject) {}
 
     void Teach()
     {
-        cout << "Teacher: " << _name << " teaches: " << Subject << endl;
+        cout << "Teacher: " << _name << " teaches: " << _subject << endl;
     }
 
 private:
-    string Subject;
+    string _subject;
 };
 
 class Policeman : public Human
 {
 public:
-    Policeman(string name) : Human(name, "Policeman") {}
+    Policeman(const string &name) : Human(name, "Policeman") {}
 
     void Check(const Human &h)
     {

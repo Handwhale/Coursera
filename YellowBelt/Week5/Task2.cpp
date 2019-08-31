@@ -19,7 +19,7 @@ class Figure
 public:
     virtual string Name() = 0;
     virtual float Perimeter() = 0;
-    virtual float Area() = 0;
+    virtual double Area() = 0;
 };
 
 class Triangle : public Figure
@@ -29,7 +29,7 @@ public:
 
     string Name() override
     {
-        return "Triangle";
+        return "TRIANGLE";
     }
 
     float Perimeter() override
@@ -37,14 +37,14 @@ public:
         return _a + _b + _c;
     }
 
-    float Area() override
+    double Area() override
     {
-        int p = (_a + _b + _c) / 2;
+        double p = static_cast<double>(_a + _b + _c) / 2;
         return sqrt(p * (p - _a) * (p - _b) * (p - _c));
     }
 
 private:
-    int _a, _b, _c;
+    double _a, _b, _c;
 };
 
 class Rect : public Figure
@@ -54,7 +54,7 @@ public:
 
     string Name() override
     {
-        return "Rect";
+        return "RECT";
     }
 
     float Perimeter() override
@@ -62,7 +62,7 @@ public:
         return (_width + _height) * 2;
     }
 
-    float Area() override
+    double Area() override
     {
         return _width * _height;
     }
@@ -78,7 +78,7 @@ public:
 
     string Name() override
     {
-        return "Circle";
+        return "CIRCLE";
     }
 
     float Perimeter() override
@@ -86,7 +86,7 @@ public:
         return 2 * 3.14 * _r;
     }
 
-    float Area() override
+    double Area() override
     {
         return 3.14 * _r * _r;
     }
