@@ -11,7 +11,7 @@ int main()
     string operation;
     int value;
     vector<bool> queue;
-    int total_worry_count;
+    int total_worry_count = 0;
 
     cin >> command_count;
     for (auto i = 0; i < command_count; i++)

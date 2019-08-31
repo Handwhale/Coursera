@@ -10,25 +10,25 @@ using namespace std;
 class Person
 {
 public:
-    Person(string first_name, string last_name, int year)
+    Person(const string &first_name, const string &last_name, const int &year)
     {
         data.FirstNameHistory[year] = first_name;
         data.LastNameHistory[year] = last_name;
     }
 
-    void ChangeFirstName(int year, const string &first_name)
+    void ChangeFirstName(const int &year, const string &first_name)
     {
         if (data.LastNameHistory.begin()->first > year)
             return;
         data.FirstNameHistory[year] = first_name;
     }
-    void ChangeLastName(int year, const string &last_name)
+    void ChangeLastName(const int &year, const string &last_name)
     {
         if (data.LastNameHistory.begin()->first > year)
             return;
         data.LastNameHistory[year] = last_name;
     }
-    string GetFullName(int year)
+    string GetFullName(const int &year) const
     {
         if (data.FirstNameHistory.begin()->first > year)
             return "No person";
@@ -36,10 +36,10 @@ public:
         auto first_name_year = FindNearestYear(data.FirstNameHistory, year);
         auto last_name_year = FindNearestYear(data.LastNameHistory, year);
 
-        return data.FirstNameHistory[first_name_year] + " " + data.LastNameHistory[last_name_year];
+        return data.FirstNameHistory.at(first_name_year) + " " + data.LastNameHistory.at(last_name_year);
     }
 
-    string GetFullNameWithHistory(int year)
+    string GetFullNameWithHistory(const int &year) const
     {
         if (data.FirstNameHistory.begin()->first > year)
             return "No person";
@@ -62,7 +62,7 @@ private:
     };
     PersonData data;
 
-    int FindNearestYear(map<int, string> &container, int &target_year)
+    int FindNearestYear(const map<int, string> &container, const int &target_year) const
     {
         int nearest_year = -1;
         for (auto &item : container)
@@ -77,7 +77,7 @@ private:
         return container.count(nearest_year) != 0 ? nearest_year : -1;
     }
 
-    string GetHistoryToThisYear(map<int, string> &container, int &target_year)
+    string GetHistoryToThisYear(const map<int, string> &container, const int &target_year) const
     {
 
         vector<string> histoty_vector;

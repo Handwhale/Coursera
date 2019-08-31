@@ -6,6 +6,24 @@
 
 using namespace std;
 
+string StringToLower(const string &str)
+{
+    string result;
+    for (const auto &ch : str)
+    {
+        result += tolower(ch);
+    }
+    return result;
+}
+
+bool StringComparator(const string &lhs, const string &rhs)
+{
+    string low_lhs = StringToLower(lhs);
+    string low_rhs = StringToLower(rhs);
+    
+    return low_lhs < low_rhs;
+}
+
 int main()
 {
     int n;
@@ -20,13 +38,7 @@ int main()
         array.push_back(value);
     }
 
-    sort(array.begin(), array.end(),
-         [](const string &lhs, const string &rhs) {
-             if (tolower(lhs[0]) < tolower(rhs[0]))
-                 return true;
-             else
-                 return false;
-         });
+    sort(array.begin(), array.end(), StringComparator);
 
     for (const auto &i : array)
     {

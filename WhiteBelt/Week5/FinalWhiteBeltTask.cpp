@@ -11,8 +11,6 @@
 
 using namespace std;
 
-// Delete с неверной датой попадает в исключение, но возможно неправильно выводит сообщение.
-
 class Date
 {
 public:
@@ -23,19 +21,13 @@ public:
         _day = 1;
     }
 
-    Date(string year, string month, string day)
+    Date(int year, int month, int day)
     {
-        _year = stoi(year);
-        _month = stoi(month);
-        if (!(_month >= 1 && _month <= 12))
-        {
-            throw invalid_argument("Month value is invalid: " + to_string(_month));
-        }
-        _day = stoi(day);
-        if (!(_day >= 1 && _day <= 31))
-        {
-            throw invalid_argument("Day value is invalid: " + to_string(_day));
-        }
+        _year = year;
+        _month = month;
+        _day = day;
+        ValidateMonth();
+        ValidateDay();
     }
 
     int GetYear() const { return _year; };
@@ -43,26 +35,36 @@ public:
     int GetDay() const { return _day; };
 
 private:
+    void ValidateMonth()
+    {
+        if (!(_month >= 1 && _month <= 12))
+        {
+            throw invalid_argument("Month value is invalid: " + to_string(_month));
+        }
+    }
+    void ValidateDay()
+    {
+        if (!(_day >= 1 && _day <= 31))
+        {
+            throw invalid_argument("Day value is invalid: " + to_string(_day));
+        }
+    }
     int _year, _month, _day;
 };
 
 bool operator<(const Date &lhs, const Date &rhs)
 {
-    if (lhs.GetYear() < rhs.GetYear())
-        return true;
+    if (lhs.GetYear() != rhs.GetYear())
+        return lhs.GetYear() < rhs.GetYear();
 
-    if (lhs.GetMonth() < rhs.GetMonth())
-        return true;
+    if (lhs.GetMonth() != rhs.GetMonth())
+        lhs.GetMonth() < rhs.GetMonth();
 
-    if (lhs.GetDay() < rhs.GetDay())
-        return true;
-
-    return false;
+    return lhs.GetDay() < rhs.GetDay();
 }
 
 ostream &operator<<(ostream &stream, const Date &date)
 {
-    stream << setfill('0');
     stream << setw(4) << date.GetYear() << '-'
            << setw(2) << date.GetMonth() << '-'
            << setw(2) << date.GetDay();
@@ -70,58 +72,64 @@ ostream &operator<<(ostream &stream, const Date &date)
     return stream;
 }
 
-bool IsFirstCharMinus(istringstream &stream)
+int ExtractValueFromDate(istream &ss)
 {
-    // first place - may means negative value
-    if (stream.peek() == '-')
+    string result;
+
+    if (ss.peek() == '-') // negative value
     {
-        stream.ignore(1);
-        return true;
+        result += '-';
+        ss.ignore();
     }
-    else
-        return false;
+
+    char ch;
+    ch = ss.peek();
+    while (ch != '-' && ch != EOF) // EOF - End of file(stream)
+    {
+
+        if (isdigit(ch) || ch == '+')
+        {
+            result += ch;
+            ss.ignore();
+        }
+        else
+        {
+            throw invalid_argument("Unexpected char value");
+        }
+        ch = ss.peek();
+    }
+    return stoi(result);
 }
 
-istringstream &operator>>(istringstream &stream, Date &date)
+istream &operator>>(istream &is, Date &date)
 {
-    string year, month, day, value;
-    if (IsFirstCharMinus(stream))
-    {
-        year += '-';
-    }
-    getline(stream, value, '-');
-    year += value;
+    string data_input;
+    is >> data_input;
+    stringstream ss(data_input); // for storing wrong input
 
-    if (IsFirstCharMinus(stream))
-    {
-        month += '-';
-    }
-    getline(stream, value, '-');
-    month += value;
-
-    if (IsFirstCharMinus(stream))
-    {
-        day += '-';
-    }
-    getline(stream, value, ' ');
-    day += value;
-
-    int int_year, int_month, int_day;
+    int year, month, day;
     try
     {
-        int_year = stoi(year);
-        int_month = stoi(month);
-        int_day = stoi(day);
+        year = ExtractValueFromDate(ss);
+        if (ss.peek() == '-')
+            ss.ignore();
+        else
+            throw invalid_argument("Unexpected char value");
+
+        month = ExtractValueFromDate(ss);
+        if (ss.peek() == '-')
+            ss.ignore();
+        else
+            throw invalid_argument("Unexpected char value");
+
+        day = ExtractValueFromDate(ss);
     }
     catch (exception &ex)
     {
-        throw invalid_argument("Wrong date format: " +
-                               year + '-' + month + '-' + day);
+        throw invalid_argument("Wrong date format: " + data_input);
     }
-
     date = Date(year, month, day);
-
-    return stream;
+    return is;
 }
 
 class Database
@@ -133,7 +141,8 @@ public:
     }
     bool DeleteEvent(const Date &date, const string &event)
     {
-        auto event_set = _data.at(date);
+        if (_data.count(date) == 0)
+            return false;
 
         auto find_result = find(_data[date].begin(), _data[date].end(), event);
         if (find_result != _data[date].end())
@@ -146,16 +155,21 @@ public:
             return false;
         }
     }
+
     int DeleteDate(const Date &date)
     {
-        set<string> &event_set = _data.at(date);
-        int n = event_set.size();
-        event_set.clear();
+        if (_data.count(date) == 0)
+            return 0;
+        _data.at(date);
+        int n = _data[date].size();
+        _data[date].clear();
         return n;
     }
 
     void Find(const Date &date) const
     {
+        if (_data.count(date) == 0)
+            return;
         for (const auto &item : _data.at(date))
         {
             cout << item << endl;
@@ -177,78 +191,6 @@ private:
     map<Date, set<string>> _data;
 };
 
-void DateCheck()
-{
-    {
-        // корректная дата
-        string input = "1-1-1";
-        istringstream ss(input);
-        Date date;
-        ss >> date;
-        cerr << date << " and " << input << endl;
-    }
-
-    {
-        // TODO
-        // корректная дата
-        string input = "-1-1-1";
-        istringstream ss(input);
-        Date date;
-        ss >> date;
-        cerr << date << " and " << input << endl;
-    }
-
-    {
-        string input = "1--1-1";
-        istringstream ss(input);
-        Date date;
-        try
-        {
-            ss >> date;
-        }
-        catch (invalid_argument &ex)
-        {
-            cerr << ex.what() << " OK" << endl;
-        }
-    }
-
-    {
-        string input = "1---1-1";
-        istringstream ss(input);
-        Date date;
-        try
-        {
-            ss >> date;
-        }
-        catch (invalid_argument &ex)
-        {
-            cerr << ex.what() << " OK" << endl;
-        }
-    }
-    {
-        // корректная дата
-        string input = "1​-+1-+1";
-        istringstream ss(input);
-        Date date;
-        ss >> date;
-        cerr << date << " and " << input << endl;
-    }
-    {
-        // корректная дата
-        string input = "1​-+1-32";
-        istringstream ss(input);
-        Date date;
-        try
-        {
-            ss >> date;
-        }
-        catch (invalid_argument &ex)
-        {
-            cerr << ex.what() << " OK" << endl;
-        }
-    }
-}
-
 int main()
 {
     Database db;
@@ -259,6 +201,7 @@ int main()
         {
             if (input_line.length() == 0)
                 continue; // empty string evade
+
             istringstream iss(input_line);
             string command;
             iss >> command;
@@ -284,7 +227,7 @@ int main()
                 }
                 else
                 {
-                   vector check if contains if (db.DeleteEvent(date_arg, event_arg))
+                    if (db.DeleteEvent(date_arg, event_arg))
                     {
                         cout << "Deleted successfully" << endl;
                     }
@@ -312,7 +255,6 @@ int main()
         catch (exception &ex)
         {
             cout << ex.what() << endl;
-            return 0;
         }
     }
     return 0;

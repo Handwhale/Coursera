@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// check two zero case
 int main()
 {
     float a, b, c, d_sqrt;
@@ -13,14 +14,29 @@ int main()
 
     d_sqrt = sqrt(b * b - 4 * a * c);
 
-    if (a == 0){
-        cout << -c/b;
+    if (a == 0)
+    {
+        if (b == 0) // c != 0
+        {
+            // no roots
+            return 0;
+        }
+        else
+        {
+            cout << -c / b;
+        }
     }
+
+    else if (b == 0 && c == 0)
+    {
+        cout << 0;
+    }
+
     else if (d_sqrt > 0)
     {
         cout << (-b - d_sqrt) / (2 * a)
-        << ' '
-        << (-b + d_sqrt) / (2 * a);
+             << ' '
+             << (-b + d_sqrt) / (2 * a);
     }
     else if (d_sqrt == 0)
     {
