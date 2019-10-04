@@ -75,11 +75,11 @@ struct NoncopyableInt
 {
     int value;
 
-    //   NoncopyableInt(const NoncopyableInt&) = delete;
-    //   NoncopyableInt& operator=(const NoncopyableInt&) = delete;
+      NoncopyableInt(const NoncopyableInt&) = delete;
+      NoncopyableInt& operator=(const NoncopyableInt&) = delete;
 
-    //   NoncopyableInt(NoncopyableInt&&) = default;
-    //   NoncopyableInt& operator=(NoncopyableInt&&) = default;
+      NoncopyableInt(NoncopyableInt&&) = default;
+      NoncopyableInt& operator=(NoncopyableInt&&) = default;
 };
 
 bool operator==(const NoncopyableInt &lhs, const NoncopyableInt &rhs)
