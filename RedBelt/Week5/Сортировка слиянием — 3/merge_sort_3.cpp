@@ -5,6 +5,8 @@
 
 using namespace std;
 
+// Плохое решение. ItRange не сработает от move iterator-а
+// Много дублирования (move_iterator ctor)
 template <typename RandomIt>
 void MergeSort(RandomIt range_begin, RandomIt range_end)
 {
@@ -19,30 +21,30 @@ void MergeSort(RandomIt range_begin, RandomIt range_end)
   // Разбить вектор на три равные части.
   size_t part_vector_size = elements.size() / 3;
 
-  using ItRange = pair<move_iterator<RandomIt>, move_iterator<RandomIt>>;
+  using ItRange = pair<RandomIt, RandomIt>;
 
-  ItRange range1{move_iterator(elements.begin()), move_iterator(elements.begin() + part_vector_size)};
-  ItRange range2{range1.second, move_iterator(elements.end() - part_vector_size)};
-  ItRange range3{range2.second,  move_iterator(elements.end())};
+  ItRange range1{elements.begin(), elements.begin() + part_vector_size};
+  ItRange range2{range1.second, elements.end() - part_vector_size};
+  ItRange range3{range2.second, elements.end()};
 
-  // // Вызвать функцию MergeSort от каждой части вектора.
+  // Вызвать функцию MergeSort от каждой части вектора.
   MergeSort(range1.first, range1.second);
   MergeSort(range2.first, range2.second);
   MergeSort(range3.first, range3.second);
 
-  // // Слить первые две трети вектора с помощью алгоритма merge, сохранив результат во временный вектор с помощью back_inserter
+  // Слить первые две трети вектора с помощью алгоритма merge, сохранив результат во временный вектор с помощью back_inserter
   vector<typename RandomIt::value_type> tmp;
   merge(
-      range1.first, range1.second,
-      range2.first, range2.second,
+      move_iterator(range1.first), move_iterator(range1.second),
+      move_iterator(range2.first), move_iterator(range2.second),
       back_inserter(tmp));
 
-  // // Слить временный вектор из предыдущего пункта с последней третью вектора из п. 2,
-  // // записав полученный отсортированный диапазон вместо исходного.
-  // merge(
-  //     move_iterator(tmp.begin()), move_iterator(tmp.end()),
-  //     move_iterator(range3.first), move_iterator(range3.second),
-  //     range_begin);
+  // Слить временный вектор из предыдущего пункта с последней третью вектора из п. 2,
+  // записав полученный отсортированный диапазон вместо исходного.
+  merge(
+      move_iterator(tmp.begin()), move_iterator(tmp.end()),
+      move_iterator(range3.first), move_iterator(range3.second),
+      range_begin);
 }
 
 void TestIntVector()
@@ -75,7 +77,6 @@ struct NoncopyableType
 
 void TestNonCopyable()
 {
-
   vector<NoncopyableType> data;
   data.push_back({1});
   data.push_back({2});
@@ -91,5 +92,6 @@ int main()
 {
   TestRunner tr;
   RUN_TEST(tr, TestIntVector);
+  RUN_TEST(tr, TestNonCopyable);
   return 0;
 }
