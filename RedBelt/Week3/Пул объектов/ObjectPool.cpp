@@ -50,7 +50,7 @@ public:
             delete i;
         }
 
-        for (int i = 0; i < released_queue.size(); i++)
+        while(!released_queue.empty())
         {
             delete released_queue.front();
             released_queue.pop();
