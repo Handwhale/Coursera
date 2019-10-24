@@ -17,17 +17,14 @@ public:
 
     ~LinkedList()
     {
-        if (head == nullptr)
-            return;
+        Node* obj = head;
+        Node* next_obj;
 
-        auto obj = head;
-        auto next_obj = obj->next;
-
-        while (next_obj)
+        while (obj)
         {
+            next_obj = obj->next;
             delete obj;
             obj = next_obj;
-            next_obj = obj->next;
         }
     }
 
