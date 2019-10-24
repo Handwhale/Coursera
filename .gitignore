@@ -35,6 +35,9 @@
 # VSCode
 .vscode
 
+# Zip files
+*.zip
+
 # For fooling around and formatting solution before coursera submission
 TestStuff.cpp
 Checkout.cpp
