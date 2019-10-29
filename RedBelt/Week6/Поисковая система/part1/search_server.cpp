@@ -33,9 +33,14 @@ void SearchServer::UpdateDocumentBase(istream &document_input)
 }
 
 void SearchServer::AddQueriesStream(
-    istream &query_input, ostream &search_results_output, SStats &stats) // прокид контекста с рефом на статы
+    istream &query_input, ostream &docid_count_output, bool profile)
 {
-  vector<pair<size_t, size_t>> docid_count(50'000, {0, 0});
+  SStats stats = {TotalDuration{"Split into words"},
+                  TotalDuration{"Index lookup"},
+                  TotalDuration{"Document sort"},
+                  TotalDuration{"Result concat"}};
+
+  vector<pair<size_t, size_t>> docid_count(max(index.GetDocsCount(), 5), {0, 0});
   for (string current_query; getline(query_input, current_query);)
   {
     // const auto words = SplitIntoWords(current_query);
@@ -60,48 +65,45 @@ void SearchServer::AddQueriesStream(
       }
     }
 
-    vector<pair<size_t, size_t>> search_results;
     {
       // ADD DURATION SORT
       ADD_DURATION(stats.sort);
-      search_results = vector<pair<size_t, size_t>>(
-          docid_count.begin(), docid_count.end());
 
-      partial_sort(search_results.begin(), search_results.begin() + 5, search_results.end(),
-          [](pair<size_t, size_t> lhs, pair<size_t, size_t> rhs) {
-            int64_t lhs_docid = lhs.first;
-            auto lhs_hit_count = lhs.second;
-            int64_t rhs_docid = rhs.first;
-            auto rhs_hit_count = rhs.second;
-            return make_pair(lhs_hit_count, -lhs_docid) > make_pair(rhs_hit_count, -rhs_docid);
-          });
+      partial_sort(docid_count.begin(), docid_count.begin() + 5, docid_count.end(),
+                   [](pair<size_t, size_t> lhs, pair<size_t, size_t> rhs) {
+                     int64_t lhs_docid = lhs.first;
+                     auto lhs_hit_count = lhs.second;
+                     int64_t rhs_docid = rhs.first;
+                     auto rhs_hit_count = rhs.second;
+                     return make_pair(lhs_hit_count, -lhs_docid) > make_pair(rhs_hit_count, -rhs_docid);
+                   });
     }
 
-    auto end_it = find_if(search_results.begin(), search_results.begin() + 5,
+    auto end_it = find_if(docid_count.begin(), Head(docid_count, 5).end(),
                           [](const pair<size_t, size_t> elem) { return elem.second == 0; });
 
     // ADD DURATION RESULT
     ADD_DURATION(stats.format);
-    search_results_output << current_query << ':';
-    for (auto [docid, hitcount] : Head(search_results, end_it - search_results.begin()))
+    docid_count_output << current_query << ':';
+    for (auto [docid, hitcount] : Head(docid_count, end_it - docid_count.begin()))
     {
-      search_results_output << " {"
-                            << "docid: " << docid << ", "
-                            << "hitcount: " << hitcount << '}';
+      docid_count_output << " {"
+                         << "docid: " << docid << ", "
+                         << "hitcount: " << hitcount << '}';
     }
-    search_results_output << endl;
+    docid_count_output << endl;
 
     // clean up vector
-    docid_count.assign(50'000, {0, 0});
+    docid_count.assign(docid_count.size(), {0, 0});
   }
 }
 
-void InvertedIndex::Add(const string &document)
+void InvertedIndex::Add(string &&document)
 {
-  docs.push_back(document);
+  docs.push_back(move(document));
 
   const size_t docid = docs.size() - 1;
-  for (const auto &word : SplitIntoWords(document))
+  for (const auto &word : SplitIntoWords(docs.back()))
   {
     index[word].push_back(docid);
   }

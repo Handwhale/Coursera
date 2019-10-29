@@ -23,15 +23,16 @@ void TestFunctionality(
   istringstream docs_input(Join('\n', docs));
   istringstream queries_input(Join('\n', queries));
 
+  //
+  // auto stats = SStats{TotalDuration{"Split into words"}, TotalDuration{"Index lookup"}, TotalDuration{"Document sort"}, TotalDuration{"Result concat"}};
+  //
+
   SearchServer srv;
+  // srv.AttachStats(&stats);
   srv.UpdateDocumentBase(docs_input);
   ostringstream queries_output;
 
-  //
-  auto stats = SStats{TotalDuration{"Split into words"}, TotalDuration{"Index lookup"}, TotalDuration{"Document sort"}, TotalDuration{"Result concat"}};
-  //
-
-  srv.AddQueriesStream(queries_input, queries_output, stats);
+  srv.AddQueriesStream(queries_input, queries_output);
 
   const string result = queries_output.str();
   const auto lines = SplitBy(Strip(result), '\n');
@@ -207,8 +208,8 @@ void TestBasicSearch()
 stringstream GenerateText(size_t sentence_count)
 {
   //
-  int min_word = 3;
-  int max_word = 12;
+  int min_word = 50;
+  int max_word = 50;
   vector<string> words{"allo", "batya", "cash", "delugani", "epta", "fartovi", "goy"};
   //
 
@@ -236,26 +237,27 @@ stringstream GenerateText(size_t sentence_count)
 
 void TestSpeed()
 {
-  
-  auto stats = SStats{TotalDuration{"Split into words"}, TotalDuration{"Index lookup"}, TotalDuration{"Document sort"}, TotalDuration{"Result concat"}};
-  auto ss = GenerateText(40000);
-  SearchServer srv(ss);
+  auto ss = GenerateText(50000);
+  SearchServer srv;
+  {
+    LOG_DURATION("Total Update Base");
+    srv = SearchServer(ss);
+  }
   ostringstream queries_output;
-  istringstream queries_input("allo batya cash delugani");
-  LOG_DURATION("Total");
-  srv.AddQueriesStream(queries_input, queries_output, stats);
-  // cout << queries_output.str() << endl;
+  istringstream queries_input("allo batya cash delugani epta fartovi kek als dcv");
+  LOG_DURATION("Total Queries");
+  srv.AddQueriesStream(queries_input, queries_output, true);
 }
 
 int main()
 {
 
   TestRunner tr;
-  // RUN_TEST(tr, TestSerpFormat);
-  // RUN_TEST(tr, TestTop5);
-  // RUN_TEST(tr, TestHitcount);
-  // RUN_TEST(tr, TestRanking);
-  // RUN_TEST(tr, TestBasicSearch);
+  RUN_TEST(tr, TestSerpFormat);
+  RUN_TEST(tr, TestTop5);
+  RUN_TEST(tr, TestHitcount);
+  RUN_TEST(tr, TestRanking);
+  RUN_TEST(tr, TestBasicSearch);
   RUN_TEST(tr, TestSpeed);
 }
 
