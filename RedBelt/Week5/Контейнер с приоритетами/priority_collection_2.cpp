@@ -9,22 +9,19 @@
 #include <list>
 #include <unordered_map>
 
-// Id = size_t
-// set<pair<rank, T>> just right
-// vector<pair<>>
-
 using namespace std;
 
 template <typename T>
 class PriorityCollection
 {
 public:
+    // При переполнении size_t все неявно умрет
     using Id = size_t;
     // Добавить объект с нулевым приоритетом
     // с помощью перемещения и вернуть его идентификатор
     Id Add(T object)
     {
-        Id unique_id = GenerateId();
+        Id unique_id = data.size();    
         auto it = priority.insert({0, unique_id}).first;
         data.push_back({move(object), it});
         return unique_id;
@@ -37,7 +34,6 @@ public:
     void Add(ObjInputIt range_begin, ObjInputIt range_end,
              IdOutputIt ids_begin)
     {
-        // Возможно стоит оптимизировать
         for (auto it = range_begin; it != range_end; it++)
         {
             *ids_begin = Add(move(*it));
@@ -58,16 +54,13 @@ public:
     // Получить объект по идентификатору
     const T &Get(Id id) const
     {
-        return data[id];
+        return data[id].first;
     }
 
     // Увеличить приоритет объекта на 1
     void Promote(Id id)
     {
-        auto it = lower_bound(priority.begin(), priority.end(), id,
-                              [](const pair<int, Id> &element, const Id &_id) {
-                                  return element.second < _id;
-                              });
+        auto it = data[id].second;
         auto new_it = priority.insert({it->first + 1, it->second}).first;
 
         priority.erase(it);
@@ -98,11 +91,6 @@ public:
 private:
     set<pair<int, Id>> priority;
     vector<pair<T, set<pair<int, Id>>::iterator>> data;
-
-    Id GenerateId()
-    {
-        return data.size();
-    }
 };
 
 class StringNonCopyable : public string
@@ -128,25 +116,33 @@ void TestNoCopy()
         strings.Promote(red_id);
     }
     strings.Promote(yellow_id);
+    strings.Get(yellow_id);
     {
-        const auto item = strings.GetMax();
-        ASSERT_EQUAL(item.first, "red");
-        ASSERT_EQUAL(item.second, 2);
+        auto item2 = strings.GetMax();
+        ASSERT_EQUAL(item2.first, "red");
+        ASSERT_EQUAL(item2.second, 2);
+
+        const auto item1 = strings.PopMax();
+        ASSERT_EQUAL(item1.first, "red");
+        ASSERT_EQUAL(item1.second, 2);
     }
     {
-        const auto item = strings.PopMax();
-        ASSERT_EQUAL(item.first, "red");
-        ASSERT_EQUAL(item.second, 2);
+        auto item2 = strings.GetMax();
+        ASSERT_EQUAL(item2.first, "yellow");
+        ASSERT_EQUAL(item2.second, 2);
+
+        const auto item1 = strings.PopMax();
+        ASSERT_EQUAL(item1.first, "yellow");
+        ASSERT_EQUAL(item1.second, 2);
     }
     {
-        const auto item = strings.PopMax();
-        ASSERT_EQUAL(item.first, "yellow");
-        ASSERT_EQUAL(item.second, 2);
-    }
-    {
-        const auto item = strings.PopMax();
-        ASSERT_EQUAL(item.first, "white");
-        ASSERT_EQUAL(item.second, 0);
+        auto item2 = strings.GetMax();
+        ASSERT_EQUAL(item2.first, "white");
+        ASSERT_EQUAL(item2.second, 0);
+
+        const auto item1 = strings.PopMax();
+        ASSERT_EQUAL(item1.first, "white");
+        ASSERT_EQUAL(item1.second, 0);
     }
     vector<StringNonCopyable> vct;
     vct.push_back("a");
@@ -156,9 +152,26 @@ void TestNoCopy()
     strings.Add(vct.begin(), vct.end(), ids.begin());
 }
 
+void TestAddWithIterators()
+{
+    PriorityCollection<string> strings;
+    vector<string> data{"white", "yellow", "red"};
+    vector<size_t> result;
+    auto back_it = back_inserter(result);
+    strings.Add(data.begin(), data.end(), back_it);
+
+    auto exp = vector<size_t>{0,1,2};
+    ASSERT_EQUAL(result, exp);
+
+    for(auto i : result){
+        strings.Promote(i);
+    }
+}
+
 int main()
 {
     TestRunner tr;
+    RUN_TEST(tr, TestAddWithIterators);
     RUN_TEST(tr, TestNoCopy);
     return 0;
 }
