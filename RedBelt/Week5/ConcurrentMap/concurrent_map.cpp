@@ -22,74 +22,39 @@ public:
         lock_guard<mutex> g;
     };
 
-    explicit ConcurrentMap(size_t bucket_count) : bucket_count(bucket_count)
-    {
-        maps.reserve(bucket_count);
-        for (int i = 0; i < bucket_count; i++)
-        {
-            maps.emplace_back();
-        }
-    }
+    explicit ConcurrentMap(size_t bucket_count) : bucket_count(bucket_count), maps(bucket_count) {}
 
     Access operator[](const K &key)
     {
         int bucket_index = key % bucket_count;
+        if (bucket_index < 0)
+            bucket_index *= -1;
         auto &holder = maps[bucket_index];
 
-        {
-            lock_guard g(holder.m);
-            if (holder.data.count(key) == 0)
-            {
-                // if key not found
-                holder.data[key] = V();
-            }
-        }
-        // Key exists
-        return {holder.data[key], lock_guard(holder.m)};
+        return {lock_guard(holder.m), holder.data[key]};
     }
 
     map<K, V> BuildOrdinaryMap()
     {
         map<K, V> result;
 
-        mutex &tmp = build_map_mutex;
-        vector<future<void>> futures;
-
         for (auto &holder : maps)
         {
-            futures.push_back(
-                async([&tmp, &holder, &result] {
-                    lock_guard holder_g(holder.m);
-                    lock_guard result_g(tmp);
-                    result.insert(holder.data.begin(), holder.data.end());
-                }));
-        }
-
-        for (auto &f : futures)
-        {
-            f.get();
+            lock_guard g(holder.m);
+            result.insert(holder.data.begin(), holder.data.end());
         }
 
         return result;
     }
 
 private:
-    // Возможно не стоило так делать
     struct DataHolder
     {
         map<K, V> data;
         mutex m;
-        // Evade mutex copy
-        DataHolder() = default;
-        DataHolder(DataHolder &&obj)
-        {
-            data = move(obj.data);
-        }
     };
-
     vector<DataHolder> maps;
-    size_t bucket_count;
-    mutex build_map_mutex;
+    const size_t bucket_count;
 };
 
 void RunConcurrentUpdates(
@@ -127,7 +92,7 @@ void TestConcurrentUpdate()
     ASSERT_EQUAL(result.size(), key_count);
     for (auto &[k, v] : result)
     {
-        AssertEqual(v, 6, "Key = " + to_string(k));
+        AssertEqual(v, thread_count * 2, "Key = " + to_string(k));
     }
 }
 
