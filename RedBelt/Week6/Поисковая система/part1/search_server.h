@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <map>
+#include <set>
 #include <string>
 #include <string_view>
 using namespace std;
@@ -13,18 +14,20 @@ using namespace std;
 class InvertedIndex
 {
 public:
-  void Add(string &&document);
-  list<size_t> Lookup(const string &word) const;
-
-  const string &GetDocument(size_t id) const
+  struct IndexData
   {
-    return docs[id];
-  }
+    size_t docId;
+    size_t hitcount;
+  };
+
+  void AddDocument(string &&document);
+  void ConstructIndex();
+  const vector<IndexData> &Lookup(string_view word) const;
 
   int GetDocsCount() const { return docs.size(); }
 
 private:
-  map<string, list<size_t>> index;
+  map<string_view, vector<IndexData>> index;
   vector<string> docs;
 };
 

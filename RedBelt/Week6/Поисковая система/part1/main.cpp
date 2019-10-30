@@ -210,7 +210,8 @@ stringstream GenerateText(size_t sentence_count)
   //
   int min_word = 50;
   int max_word = 50;
-  vector<string> words{"allo", "batya", "cash", "delugani", "epta", "fartovi", "goy"};
+  vector<string> words{"stupid", "and", "foolish", "I", "dropped", "the",
+                       "other", "to", "be", "available", "now"};
   //
 
   auto rand_value = [](int min, int max) { return min + (rand() % static_cast<int>(max - min + 1)); };
@@ -244,7 +245,7 @@ void TestSpeed()
     srv = SearchServer(ss);
   }
   ostringstream queries_output;
-  istringstream queries_input("allo batya cash delugani epta fartovi kek als dcv");
+  istringstream queries_input("stupid and foolish I dropped the other where are you");
   LOG_DURATION("Total Queries");
   srv.AddQueriesStream(queries_input, queries_output, true);
 }
@@ -261,4 +262,9 @@ int main()
   RUN_TEST(tr, TestSpeed);
 }
 
-// 50000 - 77~75 = 49+26
+/*
+Total Update Base: 961 ms
+Document sort: 2 ms
+Index lookup: 4 ms
+Total Queries: 7 ms
+*/
