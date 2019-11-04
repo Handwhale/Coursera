@@ -33,8 +33,9 @@ vector<string_view> SplitIntoWords(string_view line)
 void UpdateBaseSingleThread(istream &document_input, Synchronized<InvertedIndex> &index_handler)
 {
   InvertedIndex new_index(document_input);
-  auto access = index_handler.GetAccess();
-  access.ref_to_value = move(new_index);
+  auto access = index_handler.GetWriteAccess();
+  // access.ref_to_value = move(new_index);
+  swap(access.ref_to_value, new_index);
 }
 
 void SearchServer::UpdateDocumentBase(istream &document_input)
@@ -55,13 +56,12 @@ void AddQueriesStreamSingleThread(
   for (string current_query; getline(query_input, current_query);)
   {
     {
-      auto access = sync_index.GetAccess();
+      auto access = sync_index.GetReadAccess();
 
       docid_count.assign(max(access.ref_to_value.GetDocsCount(), 5), {0, 0});
 
       vector<string_view> words = SplitIntoWords(current_query);
-
-      for (string_view &word : words)
+      for (string_view word : words)
       {
         for (const auto &docid : access.ref_to_value.Lookup(word))
         {
