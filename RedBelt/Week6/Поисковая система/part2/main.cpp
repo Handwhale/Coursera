@@ -1,16 +1,13 @@
 #include "search_server.h"
 #include "parse.h"
 #include "test_runner.h"
-#include "global_stats.h"
 #include "profile.h"
 
 #include <algorithm>
 #include <iterator>
-#include <map>
 #include <vector>
 #include <string>
 #include <sstream>
-#include <fstream>
 #include <random>
 #include <thread>
 using namespace std;
@@ -23,21 +20,12 @@ void TestFunctionality(
   istringstream docs_input(Join('\n', docs));
   istringstream queries_input(Join('\n', queries));
 
-  //
-  // auto stats = SStats{TotalDuration{"Split into words"}, TotalDuration{"Index lookup"}, TotalDuration{"Document sort"}, TotalDuration{"Result concat"}};
-  //
-
   SearchServer srv;
-  // srv.AttachStats(&stats);
   srv.UpdateDocumentBase(docs_input);
   ostringstream queries_output;
 
   srv.AddQueriesStream(queries_input, queries_output);
-
-  if (queries_output)
-  {
-    int sd = 25;
-  }
+  this_thread::sleep_for(chrono::milliseconds{1000});
 
   const string result = queries_output.str();
   const auto lines = SplitBy(Strip(result), '\n');
@@ -270,17 +258,10 @@ int main()
 {
 
   TestRunner tr;
-  // RUN_TEST(tr, TestSerpFormat);
-  // RUN_TEST(tr, TestTop5);
-  // RUN_TEST(tr, TestHitcount);
-  // RUN_TEST(tr, TestRanking);
-  // RUN_TEST(tr, TestBasicSearch);
+  RUN_TEST(tr, TestSerpFormat);
+  RUN_TEST(tr, TestTop5);
+  RUN_TEST(tr, TestHitcount);
+  RUN_TEST(tr, TestRanking);
+  RUN_TEST(tr, TestBasicSearch);
   RUN_TEST(tr, TestSpeed);
 }
-
-/*
-Total Update Base: 961 ms
-Document sort: 2 ms
-Index lookup: 4 ms
-Total Queries: 7 ms
-*/

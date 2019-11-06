@@ -34,7 +34,6 @@ void UpdateBaseSingleThread(istream &document_input, Synchronized<InvertedIndex>
 {
   InvertedIndex new_index(document_input);
   auto access = index_handler.GetWriteAccess();
-  // access.ref_to_value = move(new_index);
   swap(access.ref_to_value, new_index);
 }
 

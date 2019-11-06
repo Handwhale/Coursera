@@ -1,6 +1,5 @@
 #pragma once
 #include <shared_mutex>
-// #include <mutex>
 using namespace std;
 
 template <typename T>
@@ -23,12 +22,6 @@ public:
     T &ref_to_value;
     unique_lock<shared_mutex> guard;
   };
-  
-  //   struct Access
-  // {
-  //   T &ref_to_value;
-  //   lock_guard<mutex> guard;
-  // };
 
   ReadAccess GetReadAccess()
   {
@@ -40,13 +33,7 @@ public:
     return {value, unique_lock(m)};
   }
 
-  // Access GetAccess()
-  // {
-  //   return {value, lock_guard(m)};
-  // }
-
 private:
   T value;
-  // mutex m;
   shared_mutex m;
 };

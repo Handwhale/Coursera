@@ -23,12 +23,7 @@ void TestFunctionality(
   istringstream docs_input(Join('\n', docs));
   istringstream queries_input(Join('\n', queries));
 
-  //
-  // auto stats = SStats{TotalDuration{"Split into words"}, TotalDuration{"Index lookup"}, TotalDuration{"Document sort"}, TotalDuration{"Result concat"}};
-  //
-
   SearchServer srv;
-  // srv.AttachStats(&stats);
   srv.UpdateDocumentBase(docs_input);
   ostringstream queries_output;
 
@@ -261,10 +256,3 @@ int main()
   RUN_TEST(tr, TestBasicSearch);
   RUN_TEST(tr, TestSpeed);
 }
-
-/*
-Total Update Base: 961 ms
-Document sort: 2 ms
-Index lookup: 4 ms
-Total Queries: 7 ms
-*/
